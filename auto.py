@@ -43,7 +43,7 @@ print(f"latest hash: {hash}")
 OUTPUT_DIR = 'games' 
 response = requests.get(f'https://cdn.jsdelivr.net/gh/gn-math/assets@{hash}/zones.json')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-games = json.load(response.text)
+games = json.loads(response.text)
 print("loaded zones")
 
 for game in games:
