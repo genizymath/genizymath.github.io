@@ -37,7 +37,7 @@ TEMPLATE_HTML = """<!DOCTYPE html>
 </html>"""
 
 hashresponse = requests.get("https://api.github.com/repos/gn-math/assets/commits")
-hash = json.load(hashresponse.text)[0]['sha']
+hash = json.loads(hashresponse.text)[0]['sha']
 print(f"latest hash: {hash}")
 # ----
 OUTPUT_DIR = 'games' 
