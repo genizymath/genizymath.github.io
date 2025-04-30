@@ -1,5 +1,6 @@
 import os
 import json
+import requests
 
 TEMPLATE_HTML = """<!DOCTYPE html>
 <html lang="en">
@@ -35,11 +36,15 @@ TEMPLATE_HTML = """<!DOCTYPE html>
 
 </html>"""
 
-ZONES_JSON_PATH = 'zones.json'
+hashresponse = requests.get("https://api.github.com/repos/gn-math/assets/commits")
+hash = json.load(hashresponse.text)[0]['sha']
+print(f"latest hash: {hash}")
+# ----
 OUTPUT_DIR = 'games' 
+response = requests.get(f'https://cdn.jsdelivr.net/gh/gn-math/assets@{hash}/zones.json')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
-with open(ZONES_JSON_PATH, 'r', encoding='utf-8') as f:
-    games = json.load(f)
+games = json.load(response.text)
+print("loaded zones")
 
 for game in games:
     game_id = str(game['id'])
