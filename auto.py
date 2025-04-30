@@ -48,6 +48,8 @@ print("loaded zones")
 
 for game in games:
     game_id = str(game['id'])
+    if game_id == '-1':
+        continue
     game_name = game['name']
     game_name_url = game_name.lower().replace("-", "").replace("  ", "-").replace(' ', '-').replace('_', '-').replace(":", "").replace(".", "")
     
