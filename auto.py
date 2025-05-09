@@ -111,7 +111,7 @@ for game in games:
     index_path = os.path.join(game_folder, 'index.html')
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    game_paths.append(index_path)
+    game_paths.append(game_folder)
     print(f"Made {index_path}")
 
 json_string = json.dumps(game_paths, indent=4)
