@@ -115,7 +115,11 @@ for game in games:
     print(f"Made {index_path}")
 
 json_string = json.dumps(game_paths, indent=4)
-with open('games.json', 'w', encoding='utf-8') as f:
-    f.write(json_string)
+try:
+    with open('games.json', 'w', encoding='utf-8') as f:
+        f.write(json_string)
+    print("games.json done")
+except Exception as e:
+    print("Error games.json:", e)
 
 print("done")
