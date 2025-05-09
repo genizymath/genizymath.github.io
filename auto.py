@@ -27,14 +27,63 @@ TEMPLATE_HTML = """<!DOCTYPE html>
     <meta name="author" content="Gn-Math">
     <link rel="icon" href="/images/favicon.png" type="image/x-icon">
     <meta name="Keywords" content="Unblocked, Games, Unblocked Games, Online Games, Unblocked Games Online, {GAME_NAME} Unblocked, {GAME_NAME} Online, {GAME_NAME} Free, {GAME_NAME} Unblocked Online, {GAME_NAME}, {GAME_NAME} Game">
-    <script>
-        window.location.href = "https://gn-math.github.io/?id={GAME_ID}";
-    </script>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+            padding: 50px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
+        a.play-button {
+            display: inline-block;
+            padding: 14px 24px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        a.play-button:hover {
+            background-color: #45a049;
+        }
+
+        .official-link {
+            display: block;
+            margin-top: 30px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .official-link:hover {
+            text-decoration: underline;
+        }
+        
+    </style>
 </head>
 
-<body></body>
+<body>
+    <h1>{GAME_NAME}</h1>
+    <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/{GAME_ID}.png" alt="{GAME_NAME} Cover">
+    <br>
+    <a class="play-button" href="https://gn-math.github.io/?id={GAME_ID}">▶ Play Now</a>
+    <a class="official-link" href="https://gn-math.github.io/" target="_blank">Official Gn-Math Site</a>
+</body>
 
-</html>"""
+</html>
+"""
 
 hashresponse = requests.get("https://api.github.com/repos/gn-math/assets/commits")
 hash = json.loads(hashresponse.text)[0]['sha']
