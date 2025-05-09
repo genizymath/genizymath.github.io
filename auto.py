@@ -76,7 +76,7 @@ TEMPLATE_HTML = """<!DOCTYPE html>
 
 <body>
     <h1>{GAME_NAME}</h1>
-    <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/{GAME_ID}.png" alt="{GAME_NAME} Cover">
+    <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/{GAME_ID}.png" style="max-width: 100%; height: auto; width: 200px;" alt="{GAME_NAME} Cover">
     <br>
     <a class="play-button" href="https://gn-math.github.io/?id={GAME_ID}">▶ Play Now</a>
     <a class="official-link" href="https://gn-math.github.io/" target="_blank">Official Gn-Math Site</a>
