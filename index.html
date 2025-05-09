@@ -90,6 +90,26 @@
     <img src="gn%20(2).png" style="max-width: 100%; height: auto; width: 200px;" alt="gn-math Cover">
     <br>
     <a class="play-button" href="https://gn-math.github.io">▶ Play Now</a>
+    <section id="game-list" style="margin-top: 60px;">
+        <ul id="games" style="list-style: none; padding-left: 0;"></ul>
+    </section>
+
+    <script>
+        fetch('games.json')
+            .then(response => response.json())
+            .then(gamePaths => {
+                const list = document.getElementById('games');
+                gamePaths.forEach(path => {
+                    const name = path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${path}/" style="color: #4CAF50;">${name}</a>`;
+                    list.appendChild(li);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading games:', error);
+            });
+    </script>
 </body>
 
 </html>
