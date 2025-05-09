@@ -111,11 +111,10 @@ for game in games:
     index_path = os.path.join(game_folder, 'index.html')
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-    relative_path = f"{OUTPUT_DIR}/{game_name_url}"
-    game_paths.append(relative_path)
+    game_paths.append(index_path)
     print(f"Made {index_path}")
 
 with open('games.json', 'w', encoding='utf-8') as f:
-    json.dump(game_paths, f, indent=4)
+    f.write(json.dumps(game_paths, f, indent=4))
 
 print("done")
