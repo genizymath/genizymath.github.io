@@ -88,12 +88,14 @@ TEMPLATE_HTML = """<!DOCTYPE html>
 hashresponse = requests.get("https://api.github.com/repos/gn-math/assets/commits")
 hash = json.loads(hashresponse.text)[0]['sha']
 print(f"latest hash: {hash}")
-# ----
-OUTPUT_DIR = 'games' 
+
+OUTPUT_DIR = 'games'
 response = requests.get(f'https://cdn.jsdelivr.net/gh/gn-math/assets@{hash}/zones.json')
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 games = json.loads(response.text)
 print("loaded zones")
+
+game_paths = []
 
 for game in games:
     game_id = str(game['id'])
@@ -101,7 +103,6 @@ for game in games:
         continue
     game_name = game['name']
     game_name_url = game_name.lower().replace("-", "").replace("  ", "-").replace(' ', '-').replace('_', '-').replace(":", "").replace(".", "")
-    
     game_folder = os.path.join(OUTPUT_DIR, game_name_url)
     os.makedirs(game_folder, exist_ok=True)
     html_content = TEMPLATE_HTML.replace('{GAME_NAME}', game_name)\
@@ -110,7 +111,11 @@ for game in games:
     index_path = os.path.join(game_folder, 'index.html')
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
-
+    relative_path = f"{OUTPUT_DIR}/{game_name_url}"
+    game_paths.append(relative_path)
     print(f"Made {index_path}")
+
+with open('games.json', 'w', encoding='utf-8') as f:
+    json.dump(game_paths, f, indent=4)
 
 print("done")
