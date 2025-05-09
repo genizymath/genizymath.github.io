@@ -119,7 +119,6 @@ try:
     with open('games.json', 'w', encoding='utf-8') as f:
         f.write(json_string)
     print("games.json done")
-    print(json_string)
 except Exception as e:
     print("Error games.json:", e)
 
