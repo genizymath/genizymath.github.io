@@ -114,7 +114,8 @@ for game in games:
     game_paths.append(index_path)
     print(f"Made {index_path}")
 
+json_string = json.dumps(game_paths, indent=4)
 with open('games.json', 'w', encoding='utf-8') as f:
-    f.write(json.dumps(game_paths, f, indent=4))
+    f.write(json_string)
 
 print("done")
