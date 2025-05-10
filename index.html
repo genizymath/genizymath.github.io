@@ -100,12 +100,11 @@
             .then(gamePaths => {
                 const list = document.getElementById('games');
                 gamePaths.forEach(path => {
-                    fetch(`${path}/`).then(r => {
-                                          const name = path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                    fetch(`${path}/`)
+                    const name = path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                     const li = document.createElement('li');
                     li.innerHTML = `<a href="${path}/" style="color: #4CAF50;">${name}</a>`;
                     list.appendChild(li);  
-                    });
                 });
             })
             .catch(error => {
