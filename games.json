@@ -316,5 +316,18 @@
     "games/super-mario-63",
     "games/jelly-mario",
     "games/angry-birds-chrome",
-    "games/sandspiel"
+    "games/sandspiel",
+    "games/side-effects",
+    "games/build-a-queen",
+    "games/3d-bowling",
+    "games/room-sort",
+    "games/sushi-roll",
+    "games/find-the-alien",
+    "games/maze-speedrun",
+    "games/kitchen-bazar",
+    "games/pokey-ball",
+    "games/slimeio",
+    "games/om-nom-run",
+    "games/tiletopia",
+    "games/bitplanes"
 ]
