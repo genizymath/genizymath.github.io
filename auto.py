@@ -303,7 +303,7 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
-    sitemap =+ """
+    sitemap += """
     <url>
         <loc>https://genizymath.github.io/{game_name_url}/</loc>
     </url>
