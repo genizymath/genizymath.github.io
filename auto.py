@@ -80,6 +80,19 @@ TEMPLATE_HTML = """<!DOCTYPE html>
             cursor: pointer;
             z-index: 10;
         }
+
+        .newtab-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            z-index: 10;
+        }
         
         .game-info {
             margin-top: 20px;
@@ -159,6 +172,7 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         <div class="game-frame-container">
             <iframe class="game-frame" id="gameFrame" allowfullscreen></iframe>
             <button class="fullscreen-btn" onclick="document.getElementById('gameFrame').requestFullscreen()">Fullscreen</button>
+            <button class="newtab-btn" onclick="window.open("{GAME_URL}", "_blank")">Open in New Tab</button>
         </div>
 
         <div id="ad-middle" style="text-align:center; margin: 2rem 0;">
