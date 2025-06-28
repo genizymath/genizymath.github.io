@@ -172,7 +172,7 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         <div class="game-frame-container">
             <iframe class="game-frame" id="gameFrame" allowfullscreen></iframe>
             <button class="fullscreen-btn" onclick="document.getElementById('gameFrame').requestFullscreen()">Fullscreen</button>
-            <button class="newtab-btn" onclick="window.open("{GAME_URL}", "_blank")">Open in New Tab</button>
+            <button class="newtab-btn" onclick="window.open("https://genizymath.github.io/iframe/{GAME_ID}.html", "_blank")">Open in New Tab</button>
         </div>
 
         <div id="ad-middle" style="text-align:center; margin: 2rem 0;">
@@ -277,6 +277,7 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     os.makedirs(GAME_DIR, exist_ok=True)
     
     html_content = TEMPLATE_HTML.replace('{GAME_NAME}', game_name)\
+                               .replace('{GAME_ID}', game_id)\
                                .replace('{GAME_COVER}', game_cover.replace(
                                    "{COVER_URL}", 
                                    "https://cdn.jsdelivr.net/gh/gn-math/covers@main"))\
