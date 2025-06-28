@@ -231,6 +231,11 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         </div>
     </footer>
 
+    <div id="ad-bottom" style="text-align:center; margin: 2rem 0;">
+        <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
+        <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
+    </div>
+
     <script src="/javascript/script.js"></script>
 </body>
 </html>
