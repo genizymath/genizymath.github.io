@@ -306,7 +306,7 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     global sitemap
     sitemap += f"""
     <url>
-        <loc>https://genizymath.github.io/{game_name_url}/</loc>
+        <loc>https://genizymath.github.io/games/{game_name_url}/</loc>
     </url>
     """
     print(f"Made {index_path}")
