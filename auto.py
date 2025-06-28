@@ -255,6 +255,15 @@ TEMPLATE_HTML = """<!DOCTYPE html>
 </html>
 """
 
+sitemap = """<?xml version="1.0" encoding="UTF-8"?>
+<urlset 
+  xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://genizymath.github.io/</loc>
+  </url>
+""";
+
 async def fetch_json(session: ClientSession, url: str) -> dict:
     async with session.get(url) as response:
         return await response.json()
@@ -294,6 +303,11 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
+    sitemap =+ """
+    <url>
+        <loc>https://genizymath.github.io/{game_name_url}/</loc>
+    </url>
+    """.replace("{game_name_url}", game_name_url)
     print(f"Made {index_path}")
     return game_file_path
 
@@ -322,6 +336,11 @@ async def main():
             print("games.json done")
         except Exception as e:
             print("Error games.json:", e)
+        try:
+            sitemap += "</urlset>"
+            with open('sitemap.xml', 'w', encoding='utf-8') as f:
+                f.write(sitemap)
+            print("sitemap done")
     
     print("done")
 
