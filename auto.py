@@ -341,7 +341,8 @@ async def main():
             with open('sitemap.xml', 'w', encoding='utf-8') as f:
                 f.write(sitemap)
             print("sitemap done")
-    
+        except Exception as e:
+            print("Error sitemap.xml:", e)
     print("done")
 
 if __name__ == '__main__':
