@@ -303,11 +303,12 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     with open(index_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
-    sitemap += """
+    global sitemap
+    sitemap += f"""
     <url>
         <loc>https://genizymath.github.io/{game_name_url}/</loc>
     </url>
-    """.replace("{game_name_url}", game_name_url)
+    """
     print(f"Made {index_path}")
     return game_file_path
 
@@ -337,6 +338,7 @@ async def main():
         except Exception as e:
             print("Error games.json:", e)
         try:
+            global sitemap
             sitemap += "</urlset>"
             with open('sitemap.xml', 'w', encoding='utf-8') as f:
                 f.write(sitemap)
