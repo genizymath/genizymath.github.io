@@ -161,15 +161,26 @@ function displayFeaturedZones(featuredZones) {
 function displayZones(zones) {
     container.innerHTML = "";
     zones.forEach((file, index) => {
-        const zoneItem = document.createElement("div");
+        const url = getZoneURL(file);
+
+        const zoneItem = document.createElement("a");
         zoneItem.className = "zone-item";
-        zoneItem.onclick = () => openZone(file);
+        zoneItem.href = url;
+        zoneItem.target = "_blank";
+        zoneItem.rel = "noopener";
+
+        zoneItem.onclick = (event) => {
+            event.preventDefault();
+            openZone(file);
+        };
+
         const img = document.createElement("img");
         img.dataset.src = file.cover.replace("{COVER_URL}", coverURL).replace("{HTML_URL}", htmlURL);
         img.alt = file.name;
         img.loading = "lazy";
         img.className = "lazy-zone-img";
         zoneItem.appendChild(img);
+
         const button = document.createElement("button");
         button.textContent = file.name;
         button.onclick = (event) => {
@@ -177,8 +188,10 @@ function displayZones(zones) {
             openZone(file);
         };
         zoneItem.appendChild(button);
+
         container.appendChild(zoneItem);
     });
+
     if (container.innerHTML === "") {
         container.innerHTML = "No zones found.";
     } else {
@@ -196,13 +209,34 @@ function displayZones(zones) {
             }
         });
     }, {
-        rootMargin: "100px", 
+        rootMargin: "100px",
         threshold: 0.1
     });
 
     lazyImages.forEach(img => {
         imageObserver.observe(img);
     });
+}
+
+function openZone(file) {
+    const url = getZoneURL(file);
+    if (file.url && file.url.startsWith("http")) {
+        window.open(url, "_blank");
+    } else {
+        window.location.href = url;
+    }
+}
+
+function getZoneURL(file) {
+    if (file.url && file.url.startsWith("http")) {
+        return file.url;
+    } else {
+        return "/games/" + file.name
+            .replace(/ /g, '-')
+            .toLowerCase()
+            .replace(/[^a-z0-9-]/g, '')
+            .replace(/-+/g, '-');
+    }
 }
 
 function filterZones() {
@@ -213,20 +247,6 @@ function filterZones() {
     }
     displayZones(filteredZones);
 }
-
-function openZone(file) {
-    if (file.url.startsWith("http")) {
-        window.open(file.url, "_blank");
-    } else {
-        const gameurl = "/games/" + file.name
-            .replace(/ /g, '-')
-            .toLowerCase()
-            .replace(/[^a-z0-9-]/g, '')
-            .replace(/-+/g, '-');
-        window.location.href = gameurl;
-    }
-}
-
 
 function aboutBlank() {
     const newWindow = window.open("about:blank", "_blank");
