@@ -114,15 +114,26 @@ function sortZones() {
 function displayFeaturedZones(featuredZones) {
     featuredContainer.innerHTML = "";
     featuredZones.forEach((file, index) => {
-        const zoneItem = document.createElement("div");
+        const url = getZoneURL(file);
+
+        const zoneItem = document.createElement("a");
         zoneItem.className = "zone-item";
-        zoneItem.onclick = () => openZone(file);
+        zoneItem.href = url;
+        zoneItem.target = "_blank";
+        zoneItem.rel = "noopener";
+
+        zoneItem.onclick = (event) => {
+            event.preventDefault();
+            openZone(file);
+        };
+
         const img = document.createElement("img");
         img.dataset.src = file.cover.replace("{COVER_URL}", coverURL).replace("{HTML_URL}", htmlURL);
         img.alt = file.name;
         img.loading = "lazy";
         img.className = "lazy-zone-img";
         zoneItem.appendChild(img);
+
         const button = document.createElement("button");
         button.textContent = file.name;
         button.onclick = (event) => {
@@ -130,6 +141,7 @@ function displayFeaturedZones(featuredZones) {
             openZone(file);
         };
         zoneItem.appendChild(button);
+
         featuredContainer.appendChild(zoneItem);
     });
     if (featuredContainer.innerHTML === "") {
