@@ -138,6 +138,10 @@ TEMPLATE_HTML = """<!DOCTYPE html>
     </style>
 </head>
 <body class="dark-mode">
+    <div id="ad-top" style="text-align:center; margin: 1rem 0;">
+        <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
+        <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
+    </div>
     <header>
         <div class="header-content">
             <a class="logo" href="/index.html" style="text-decoration: none; color: inherit;">genizymath</a>
@@ -155,6 +159,11 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         <div class="game-frame-container">
             <iframe class="game-frame" id="gameFrame" allowfullscreen></iframe>
             <button class="fullscreen-btn" onclick="document.getElementById('gameFrame').requestFullscreen()">Fullscreen</button>
+        </div>
+
+        <div id="ad-middle" style="text-align:center; margin: 2rem 0;">
+            <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
+            <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
         </div>
         
         <div class="game-info">
