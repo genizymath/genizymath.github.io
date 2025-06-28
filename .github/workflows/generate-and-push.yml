@@ -28,6 +28,6 @@ jobs:
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add games/ games.json iframe/
+        git add games/ games.json iframe/ sitemap.xml
         git commit -m "Add new games" || echo "no new games"
         git push
