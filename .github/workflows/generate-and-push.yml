@@ -19,7 +19,7 @@ jobs:
         python-version: '3.11'
 
     - name: Install dependencies
-      run: pip install requests
+      run: pip install aiohttp
 
     - name: Run script
       run: python auto.py
