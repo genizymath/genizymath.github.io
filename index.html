@@ -1,116 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="images/favicon.png">
+    <link rel="apple-touch-icon" href="images/favicon.png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gn-Math | Unblocked Games - Hundreds of Unique and Exclusive Games</title>
-    <meta name="title" content="Gn-Math | Unblocked Games - Hundreds of Unique and Exclusive Games">
-    <meta name="description" content="Gn-Math offers hundreds of unique and exclusive unblocked games. Play freely at school, work, or anywhere! New games added regularly.">
-    <link rel="canonical" href="https://genizymath.github.io/">
+    <title>genizymath</title>
+    <meta name="title" content="GN-Math">
+    <meta name="description" content="Play unbl*cked games like Crazy Cattle 3D and DriveMad on GN-Math. Fast, free, no downloads—perfect for school or home.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://genizymath.github.io/">
-    <meta property="og:title" content="Gn-Math | Unblocked Games - Hundreds of Unique and Exclusive Games">
-    <meta property="og:description" content="Gn-Math offers hundreds of unique and exclusive unblocked games. Play freely at school, work, or anywhere! New games added regularly.">
-    <meta property="og:image" content="https://genizymath.github.io/images/og.jpg">
+    <meta property="og:title" content="GN-Math">
+    <meta property="og:description" content="Play unbl*cked games like Crazy Cattle 3D and DriveMad on GN-Math. Fast, free, no downloads—perfect for school or home.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:url" content="https://genizymath.github.io/">
-    <meta name="twitter:title" content="Gn-Math | Unblocked Games - Hundreds of Unique and Exclusive Games">
-    <meta name="twitter:description" content="Gn-Math offers hundreds of unique and exclusive unblocked games. Play freely at school, work, or anywhere! New games added regularly.">
-    <meta name="twitter:image" content="https://genizymath.github.io/images/twitter.png">
-    <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta name="author" content="Gn-Math Team">
-    <meta name="publisher" content="Gn-Math">
-    <meta name="Keywords" content="Unblocked, Games, Unblocked Games, Online Games, Unblocked Games Online,">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "url": "https://gnmaths.github.io/",
-      "name": "Gn-Math",
-      "potentialAction": {
-        "@type": "SearchAction",
-        "target": "https://gnmaths.github.io/search?q={search_term_string}",
-        "query-input": "required name=search_term_string"
-      }
-    }
-    </script>
-    <link rel="icon" href="/images/favicon.png" type="image/png">
-    <style>
-        body {
-            font-family: sans-serif;
-            text-align: center;
-            padding: 50px;
-            background-color: #333;
-            color: #fff;
-        }
-
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        a.play-button {
-            display: inline-block;
-            padding: 14px 24px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 18px;
-            border: none;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: background-color 0.3s ease;
-        }
-
-        a.play-button:hover {
-            background-color: #45a049;
-        }
-
-        .official-link {
-            display: block;
-            margin-top: 30px;
-            color: #fff;
-            font-size: 14px;
-        }
-
-        .official-link:hover {
-            text-decoration: underline;
-        }
-        
-    </style>
+    <meta name="twitter:title" content="GN-Math">
+    <meta name="twitter:description" content="Play unbl*cked games like Crazy Cattle 3D and DriveMad on GN-Math. Fast, free, no downloads—perfect for school or home.">
+    <meta name="keywords" content="unblocked games, games for school, browser games, chromebook games, no download games, html5 games, free unblocked games, genizymath, fun games at school, crazy cattle 3d, play crazy cattle 3d, crazy cattle 3d unblocked, crazy cattle, crazy cattle unblocked, play crazy cattle, crazy cattle online, crazy cattle 3d online">
+    <link rel="stylesheet" href="styles/style.css">
 </head>
+<body class="dark-mode">
+    <header>
+        <div class="header-content">
+            <a class="logo" href="/" style="text-decoration: none; color: inherit;">genizymath</a>
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="Search zones..." oninput="filterZones()">
+                <select id="sortOptions" onchange="sortZones()">
+                    <option value="name">Name</option>
+                    <option value="id">ID (Date)</option>
+                    <option value="popular">Popular</option>
+                </select>
+            </div>
+            <div class="control-buttons">
+                <button id="settings" style="background-color: var(--primary-color); color: white; border: none; border-radius: 4px; padding: 0.5rem 1rem; font-size: 16px; cursor: pointer;">Settings</button>
+            </div>
+        </div>
+    </header>
 
-<body>
-    <h1>This is just for google SEO</h1>
-    <h4>This is just a site for gn-math to use google seo since gn-math is a static, single paged, website</h2>
-    <img src="gn%20(2).png" style="max-width: 100%; height: auto; width: 200px;" alt="gn-math Cover">
-    <br>
-    <a class="play-button" href="https://gn-math.github.io">▶ Play Now</a>
-    <section id="game-list" style="margin-top: 60px;">
-        <ul id="games" style="list-style: none; padding-left: 0;"></ul>
-    </section>
+    <main>
+        <details id="featuredZonesWrapper" open>
+            <summary id="allZonesSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">Featured Zones</summary>
+            <div id="featuredZones" class="zone-container"></div>
+        </details>
+        <br><hr><br>
+        <details id="allZonesWrapper" open>
+            <summary id="allSummary" style="font-size: 1.2rem; font-weight: bold; cursor: pointer;">All Zones</summary>
+            <div id="container">Loading...</div>
+        </details>
+    </main>
 
-    <script>
-        fetch('games.json')
-            .then(response => response.json())
-            .then(gamePaths => {
-                const list = document.getElementById('games');
-                gamePaths.forEach(path => {
-                    fetch(`${path}/`)
-                    const name = path.split('/').pop().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a href="${path}/" style="color: #4CAF50;">${name}</a>`;
-                    list.appendChild(li);  
-                });
-            })
-            .catch(error => {
-                console.error('Error loading games:', error);
-            });
-    </script>
+    <div id="zoneViewer">
+        <div class="zone-header">
+            <div class="zone-title">
+                <h2 id="zoneName">zone</h2>
+                <span id="zoneId" style="display: none;"></span>
+                <a id="zoneAuthor" href="#" target="_blank">by Author</a>
+            </div>
+            <div class="zone-controls">
+                <button onclick="fullscreenZone()">Fullscreen</button>
+                <button onclick="aboutBlank()">Open in New Tab</button>
+                <button onclick="downloadZone()">Download</button>
+                <button onclick="closeZone()">Close</button>
+            </div>
+        </div>
+        <iframe id="zoneFrame"></iframe>
+    </div>
+
+    <div id="popupOverlay">
+        <div class="popup">
+            <div class="popup-header">
+                <h3 id="popupTitle">Title</h3>
+                <button id="popupClose" onclick="closePopup()">×</button>
+            </div>
+            <div id="popupBody">
+                Content will be here
+            </div>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-links">
+            <a href="#" onclick="showContact(); return false;">Contact</a>
+            <a href="#" onclick="loadPrivacy(); return false;">Privacy Policy</a>
+            <a href="javascript:saveData()">Export Data</a>
+            <label for="importData" style="color: var(--primary-color); cursor: pointer;">Import Data</label>
+            <input type="file" id="importData" style="display: none;" onchange="loadData(event)">
+        </div>
+    </footer>
+
+    <script src="javascript/script.js"></script>
 </body>
-
 </html>

@@ -1,0 +1,349 @@
+:root {
+    --primary-color: #fc2651;
+    --text-color: #333;
+    --background-color: #FFFFFF;
+    --card-bg: #f8f8f8;
+    --card-border: #e0e0e0;
+    --shadow: rgba(0, 0, 0, 0.1);
+    --popup-bg: #fff;
+}
+
+.dark-mode {
+    --primary-color: #fc2651;
+    --text-color: #e0e0e0;
+    --background-color: #181818;
+    --card-bg: #252525;
+    --card-border: #383838;
+    --shadow: rgba(0, 0, 0, 0.4);
+    --popup-bg: #252525;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 5px var(--shadow);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin: 0.5rem 0;
+}
+
+#searchBar {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    flex-grow: 1;
+    min-width: 0;
+    font-size: 16px;
+}
+
+#sortOptions {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--card-border);
+    font-size: 16px;
+}
+
+.control-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+#settings {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+#container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 1rem;
+}
+
+.zone-item {
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 2px 4px var(--shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.zone-item:hover {
+    background-color: var(--card-border);
+}
+
+.zone-item img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+}
+
+.zone-item button {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    flex-grow: 1;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#zoneViewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
+    z-index: 1000;
+    display: none;
+    flex-direction: column;
+}
+
+.zone-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+}
+
+.zone-title {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#zoneName {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+#zoneId {
+    display: none;
+}
+
+#zoneAuthor {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+}
+
+#zoneAuthor:hover {
+    text-decoration: underline;
+}
+
+.zone-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.zone-controls button {
+    background-color: transparent;
+    border: 1px solid white;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.zone-controls button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#zoneFrame {
+    flex-grow: 1;
+    border: none;
+    width: 90%;
+    height: 90%;
+}
+
+#popupOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.popup {
+    background-color: var(--popup-bg);
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.popup-header {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.8rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#popupTitle {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+#popupClose {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+#popupBody {
+    padding: 1rem;
+    overflow-y: auto;
+    color: var(--text-color);
+}
+
+#popupBody input[type="text"],
+#popupBody input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+#settings-button {
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 1rem;
+}
+
+footer {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    text-align: center;
+    margin-top: 2rem;
+    border-top: 1px solid var(--card-border);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.footer-links a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+#zoneCount {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .header-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-container {
+        width: 100%;
+    }
+
+    #container {
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 15px;
+    }
+
+    .zone-item img {
+        height: 140px;
+    }
+
+    .zone-item button {
+        height: 60px;
+        font-size: 14px;
+    }
+}
+
+#featuredZones {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 20px;
+    margin-top: 1rem;
+}
