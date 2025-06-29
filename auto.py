@@ -368,6 +368,8 @@ async def main():
             sitemap += "</urlset>"
             with open('sitemap.xml', 'w', encoding='utf-8') as f:
                 f.write(sitemap)
+            with open('newsitemap.xml', 'w', encoding='utf-8') as f:
+                f.write(sitemap)
             print("sitemap done")
         except Exception as e:
             print("Error sitemap.xml:", e)
