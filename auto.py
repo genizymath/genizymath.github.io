@@ -149,11 +149,21 @@ TEMPLATE_HTML = """<!DOCTYPE html>
             }
         }
     </style>
+    <script async="async" data-cfasync="false" src="//usefulspeak.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
+    <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
 </head>
 <body class="dark-mode">
     <div id="ad-top" style="text-align:center; margin: 1rem 0;">
-        <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
-        <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
+        <script type="text/javascript">
+	        atOptions = {
+		        'key' : '33e6a4f2bd7346c557e8569983b9a966',
+		        'format' : 'iframe',
+		        'height' : 90,
+		        'width' : 728,
+		        'params' : {}
+	        };
+        </script>
+        <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
     </div>
     <header>
         <div class="header-content">
@@ -176,8 +186,16 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         </div>
 
         <div id="ad-middle" style="text-align:center; margin: 2rem 0;">
-            <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
-            <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
+            <script type="text/javascript">
+	            atOptions = {
+		            'key' : '33e6a4f2bd7346c557e8569983b9a966',
+		            'format' : 'iframe',
+		            'height' : 90,
+		            'width' : 728,
+		            'params' : {}
+	            };
+            </script>
+            <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
         </div>
         
         <div class="game-info">
@@ -246,8 +264,16 @@ TEMPLATE_HTML = """<!DOCTYPE html>
     </footer>
 
     <div id="ad-bottom" style="text-align:center; margin: 2rem 0;">
-        <script async="async" data-cfasync="false" src="//pl27027695.profitableratecpm.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
-        <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
+        <script type="text/javascript">
+	        atOptions = {
+		        'key' : '33e6a4f2bd7346c557e8569983b9a966',
+		        'format' : 'iframe',
+		        'height' : 90,
+		        'width' : 728,
+		        'params' : {}
+	        };
+        </script>
+        <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
     </div>
 
     <script src="/javascript/script.js"></script>
