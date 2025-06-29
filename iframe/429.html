@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <base href="https://cdn.jsdelivr.net/gh/genizy/code-editor/">
+    <base href="https://cdn.jsdelivr.net/gh/genizy/code-editor@main/">
     <title>gn code editor</title>
     <link rel="stylesheet" href="styles/index.css">
 </head>
@@ -34,7 +34,7 @@
         }
 
         function pythoneditor() {
-            fetch("python.html").th>en(res => res.text()).then(html => {
+            fetch("python.html").then(res => res.text()).then(html => {
                 document.documentElement.innerHTML = html;
                 document.documentElement.querySelectorAll('script').forEach(oldScript => {
                     const newScript = document.createElement('script');
