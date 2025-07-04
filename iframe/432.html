@@ -1,54 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
-  <title>Abandoned</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+<html><head>
+    
+    
+    <script>
+        window.dataLayer = window.dataLayer || [];
 
-    #flash-container {
-      width: 800px; 
-      height: 600px; 
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-    }
-
-    @media (max-width: 820px) {
-      #flash-container {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
-      }
-    }
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.7.2/ruffle.min.js"></script>
-</head>
-<body>
-  <div id="flash-container"></div>
-
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
-      const container = document.getElementById("flash-container");
-      if (ruffle && container) {
-        const player = ruffle.createPlayer();
-        player.style.width = "100%";
-        player.style.height = "100%";
-        container.appendChild(player);
-        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@95bc2cf6ec80d7d7474889d684d2ff169221ccd4/abandoned-17665.swf");
-      } else {
-        container.textContent = "Ruffle failed to load.";
-      }
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'G-WX5VS54ZDW');
+    </script>
+    <meta charset="utf8">
+    <style> html, body { margin: 0; padding: 0; overflow: hidden; height: 100%; } #ruffle { width: 100%; height: 100%; } </style>
+  <style type="text/css"></style></head>
+  <body>
+    <div id="ruffle" style="width: 900px; height: 600px;"><ruffle-player style="width: 100%; height: 100%;"></ruffle-player></div>
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script> <script>  var swfobject = {};
+swfobject.embedSWF = function (url, containerId) {
+  var ruffle = window.RufflePlayer.newest();
+  var container = document.getElementById(containerId);
+  var player = ruffle.createPlayer();
+  container.appendChild(player);
+  if (url) {
+    player.load({
+      url: url
     });
-  </script>
-</body>
-</html>
+  } else {
+    console.error("No SWF file specified in the URL parameters.");
+  }
+  const resizePlayer = () => {
+    container.style.width = window.innerWidth + 'px';
+    container.style.height = window.innerHeight + 'px';
+    player.style.width = '100%';
+    player.style.height = '100%';
+  };
+  resizePlayer();
+  window.addEventListener('resize', resizePlayer);
+};
+swfobject.embedSWF("https://cdn.jsdelivr.net/gh/jackilyna/codemotion2015@6ed8c2fb61182b360a852e0417cc2d6370d5164e/flg/abandoned.swf", 'ruffle'); </script> 
+  
+</body></html>
