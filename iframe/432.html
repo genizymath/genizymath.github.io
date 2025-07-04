@@ -3,48 +3,70 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Abandoned</title>
   <style>
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       background: black;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
     }
 
     #flash-container {
-      width: 800px; 
-      height: 600px; 
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: black;
     }
 
-    @media (max-width: 820px) {
-      #flash-container {
-        width: 100%;
-        height: auto;
-        aspect-ratio: 4 / 3;
-      }
+    ruffle-player {
+      width: 100%;
+      height: 100%;
+      background: black;
+      display: block;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.7.2/ruffle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/somer-sheff-73/xv@main/ruffle.js"></script>
 </head>
 <body>
   <div id="flash-container"></div>
 
   <script>
+    const container = document.getElementById("flash-container");
+
+    function resizeGame() {
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const aspectRatio = 4 / 3;
+
+      let width = Math.floor(windowWidth);
+      let height = Math.floor(windowWidth / aspectRatio);
+
+      if (height > windowHeight) {
+        height = Math.floor(windowHeight);
+        width = Math.floor(height * aspectRatio);
+      }
+
+      container.style.width = `${width}px`;
+      container.style.height = `${height}px`;
+    }
+
+    window.addEventListener("resize", resizeGame);
     window.addEventListener("DOMContentLoaded", () => {
+      resizeGame();
+
       const ruffle = window.RufflePlayer?.newest() || window.RufflePlayer?.createPlayer();
-      const container = document.getElementById("flash-container");
       if (ruffle && container) {
         const player = ruffle.createPlayer();
         player.style.width = "100%";
         player.style.height = "100%";
+        player.style.background = "black";
         container.appendChild(player);
-        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@95bc2cf6ec80d7d7474889d684d2ff169221ccd4/abandoned-17665.swf");
+        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@5b0d188b716d05bd4264c4096ad358d5add6388e/abandoned%20(1).swf");
       } else {
         container.textContent = "Ruffle failed to load.";
       }
