@@ -3,7 +3,7 @@
 
     function launch() {
       try {
-        fetch("https://cdn.jsdelivr.net/gh/genizy/web-port@main/omoriport/index.html?t="+Date.now())
+        fetch("https://cdn.jsdelivr.net/gh/genizy/web-port@latest/omoriport/index.html?t="+Date.now())
           .then(response => response.text())
           .then(html => {
                 document.documentElement.innerHTML = html;
@@ -23,3 +23,4 @@
       }
     }
   </script>
+
