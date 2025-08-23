@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/undertale/"> 
+    <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@latest/undertale/"> 
     <meta charset="utf-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0" />
@@ -359,6 +359,34 @@
       </div>
     </div>
     <script>
+      const blob = new Blob([document.querySelector('#tick-worker').textContent]);
+const worker = new Worker(window.URL.createObjectURL(blob));
+
+worker.onmessage = function () {
+  GM_tick(performance.now());
+}
+
+const isMultiplayer = function () {
+  if (typeof GM_is_multiplayer !== 'function') {
+    return false;
+  }
+
+  return GM_is_multiplayer() !== 0;
+}
+
+document.addEventListener('visibilitychange', function () {
+  if (!isMultiplayer()) {
+    return;
+  }
+
+  if (document.visibilityState === 'hidden') {
+    worker.postMessage({run: true, fps: 60});
+  } else {
+    worker.postMessage({run: false});
+  }
+});
+</script>
+<script>
       function mergeFiles(fileParts) {
           return new Promise((resolve, reject) => {
               let buffers = [];
@@ -387,7 +415,7 @@
           return parts;
       }
   
-      mergeFiles(getParts("game.unx", 1, 7)).then(async url => {
+      mergeFiles(getParts("game.unx", 1, 5)).then(async url => {
           window.gameUnxUrl = url;
   
           const originalFetch = window.fetch;
