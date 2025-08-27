@@ -60,7 +60,7 @@
                 chunks.push(value);
     
                 let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
-                let mbTotal = '2127.52';
+                let mbTotal = (totalBytes / (1024 * 1024)).toFixed(2);
                 loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
             }
     
@@ -118,7 +118,7 @@
                 "asmCodeUrl": asmurl,
                 "asmMemoryUrl": "Build.asm.memory.unityweb",
                 "asmFrameworkUrl": "Build.asm.framework.unityweb",
-                "TOTAL_MEMORY": 100000000,
+                "TOTAL_MEMORY": 268435456,
                 "graphicsAPI": ["WebGL 2.0"],
                 "webglContextAttributes": { "preserveDrawingBuffer": false },
                 "splashScreenStyle": "Dark",
