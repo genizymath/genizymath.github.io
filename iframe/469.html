@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <base href="https://cdn.jsdelivr.net/gh/genizy/sandstone-gn/">
+        <title>Sandstone</title>
+        <link rel="icon" type="image/png" href="image.png">
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            html, body {
+                height: 100%;
+                font-family: Arial, sans-serif;
+            }
+
+            body {
+                margin: 0px;
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+            }
+
+            a, a:hover, a:visited, a:active {
+                color: inherit;
+                text-decoration: none;
+            }
+
+            #options_div {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translateX(-50%) translateY(-50%);
+                ; z-index: 1;
+                flex-direction: column;
+                width: min(400px, 100%);
+                height: min(300px, 100%);
+                padding: 8px;
+                gap: 8px;
+                background-color: #ffffff;
+            }
+
+            #options_div * {
+                margin: 0px;
+            }
+
+            #eval_js_input {
+                width: 100%;
+                height: 120px;
+                resize: none;
+                margin-top: -4px;
+            }
+
+            #address_bar {
+                display: flex;
+                height: 26px;
+            }
+
+            #address_bar * {
+                border-radius: 1px;
+            }
+
+            #close_options_button {
+                padding-left: 8px;
+                padding-right: 8px;
+            }
+
+            #url_box {
+                flex-grow: 1;
+            }
+
+            #frame_container {
+                flex-grow: 1;
+                background-color: #222222;
+            }
+
+            #frame_container iframe {
+                width: 100%;
+                height: 100%;
+                border-width: 0px;
+            }
+
+            #favicon_container {
+                width: 24px;
+                text-align: center;
+                border: 1px solid black;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="address_bar">
+            <div id="favicon_container">
+                <p id="favicon_text" style="display: none;">...</p>
+                <img id="favicon_img" width="24px" height="24px">
+            </div>
+            <input id="url_box" type="text" placeholder="Enter URL here..." value="sandstone://home">
+            <button id="navigate_button">Submit</button>
+            <button id="options_button">Options</button>
+        </div>
+        <div id="frame_container"></div>
+        <div id="options_div" style="display: none;">
+            <div style="display: flex;">
+                <h2 style="margin: 0px;">Options:</h2>
+                <div style="flex-grow: 1"></div>
+                <button id="close_options_button">X</button>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <label for="wisp_url_input">Wisp URL:</label>
+                <input id="wisp_url_input" type="text" style="flex-grow: 1">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <p style="font-size: 16px;">Eval JS:</p>
+                <div style="flex-grow: 1"></div>
+                <button id="eval_js_button">Run</button>
+            </div>
+            <textarea id="eval_js_input"></textarea>
+            <div style="flex-grow: 1"></div>
+            <p id="version_p" style="font-size: 14px;">
+                <a href="https://github.com/ading2210/sandstone" target="_blank">
+                    <i>
+                        Sandstone <span id="version_text"></span>
+                    </i>
+                </a>
+            </p>
+        </div>
+        <script src="index.js"></script>
+    </body>
+</html>
