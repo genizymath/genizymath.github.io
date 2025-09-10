@@ -1,23 +1,20 @@
-
 <html lang="en">
 <head>
-	<base href="https://cdn.jsdelivr.net/gh/mll-enh/die@fe0e5b08118dacdefc79f2b1427b283be80a9447/miku/">
+	<base href="https://cdn.jsdelivr.net/gh/bubbls/fnf-mods@6b6680f79ab8c4e8349a920c2a240c5e7ee689ea/miku/">
 	<meta charset="utf-8">
-	 
-	<title>Friday Night Funkin' + Hatsune Miku</title> 
+	
+	<title>Friday Night Funkin'</title> 
 	
 	<meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	
 	
-	<link rel="shortcut icon" type="image/png" href="./favicon.png">
 	
-	
-	<script type="text/javascript" src="./Funkin.js"></script>
+	<script type="text/javascript" src="Funkin.js"></script>
 	
 	<script>
 		window.addEventListener ("touchmove", function (event) { event.preventDefault (); }, { capture: false, passive: false });
-		if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+		if (typeof window.devicePixelRatio !='undefined' && window.devicePixelRatio > 2) {
 			var meta = document.getElementById ("viewport");
 			meta.setAttribute ('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
 		}
