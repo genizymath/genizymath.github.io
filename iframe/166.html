@@ -43,18 +43,39 @@
       var loadingBar = document.querySelector("#unity-loading-bar");
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
 
+      function unityShowBanner(msg, type) {
+      }
 
-      var loaderUrl = "Build/Build.loader.js";
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/Build.loader.js";
       var config = {
-        dataUrl: "Build/Build.data",
-        frameworkUrl: "Build/Build.framework.js",
-        codeUrl: "Build/Build.wasm",
+        dataUrl: buildUrl + "/Build.data",
+        frameworkUrl: buildUrl + "/Build.framework.js",
+        codeUrl: buildUrl + "/Build.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "twoootwo",
         productName: "Bad Parenting 1",
         productVersion: "1.0",
-        showBanner: false,
+        showBanner: unityShowBanner,
       };
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+        canvas.style.width = window.innerWidth + 'px';
+        canvas.style.height = window.innerHeight + 'px';
+      } else {
+        function resizeCanvas() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+      }
 
       loadingBar.style.display = "block";
 
@@ -69,12 +90,6 @@
           alert(message);
         });
       };
-            function resizeCanvas() {
-                canvas.height = window.innerHeight;
-                canvas.width = window.innerWidth;
-                setTimeout(resizeCanvas, 1000);
-            }
-            resizeCanvas();
       document.body.appendChild(script);
 
     </script>
