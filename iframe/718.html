@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <base href="https://cdn.jsdelivr.net/gh/web-ports/clover-pit@main/">
+    <base href="https://cdn.jsdelivr.net/gh/web-ports/untitled-goose-game@main/">
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity Web Player | CloverPit</title>
+    <title>Unity Web Player | Untitled Goose Game</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
@@ -42,7 +42,7 @@
         loadedBytes += value.length;
         chunks.push(value);
         let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
-        let mbTotal = '86.96';
+        let mbTotal = '95.69';
         loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
       }
       let fullBuffer = new Uint8Array(received);
@@ -71,8 +71,8 @@
     }
     (async () => {
       const [dataUrl, wasmUrl] = await Promise.all([
-        mergeFiles(getParts("Build/CloverPit.data", 1, 3), "CloverPit.data"),
-        mergeFiles(getParts("Build/CloverPit.wasm", 1, 3), "CloverPit.wasm"),
+        mergeFiles(getParts("Build/Untitled Goose Game.data", 1, 4), "Untitled Goose Game.data"),
+        mergeFiles(getParts("Build/Untitled Goose Game.wasm", 1, 2), "Untitled Goose Game.wasm"),
       ]);
 
       var container = document.querySelector("#unity-container");
@@ -91,16 +91,16 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/CloverPit.loader.js";
+      var loaderUrl = buildUrl + "/Untitled Goose Game.loader.js";
       var config = {
         arguments: [],
         dataUrl: dataUrl,
-        frameworkUrl: buildUrl + "/CloverPit.framework.js",
+        frameworkUrl: buildUrl + "/Untitled Goose Game.framework.js",
         codeUrl: wasmUrl,
         streamingAssetsUrl: "StreamingAssets",
-        companyName: "Panik Arcade",
-        productName: "CloverPit",
-        productVersion: "1.3",
+        companyName: "House House & Bog",
+        productName: "Untitled Goose Game",
+        productVersion: "0.2",
         showBanner: unityShowBanner,
       };
 
@@ -129,11 +129,12 @@
           progressBarFull.style.width = 100 * progress + "%";
         }).then((unityInstance) => {
           loadingBar.style.display = "none";
+          loadingText.remove();
         }).catch((message) => {
         });
       };
-    });
       document.body.appendChild(script);
+    })();
     </script>
   </body>
 </html>
