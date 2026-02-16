@@ -23,6 +23,7 @@ TEMPLATE_HTML = """<!DOCTYPE html>
     <meta property="og:title" content="Play {GAME_NAME} | GN-Math Unblocked Games">
     <meta property="og:description" content="Play {GAME_NAME} unblocked on GN-Math - No downloads required! Enjoy this fun HTML5 game at school or work.">
     <meta property="og:image" content="{GAME_COVER}">
+	<meta name="google-adsense-account" content="ca-pub-5521219086088837">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
@@ -149,21 +150,11 @@ TEMPLATE_HTML = """<!DOCTYPE html>
             }
         }
     </style>
-    <script async="async" data-cfasync="false" src="//usefulspeak.com/89f8ffc8bcb270fe3019ac82af49b01a/invoke.js"></script>
-    <div id="container-89f8ffc8bcb270fe3019ac82af49b01a"></div>
 </head>
 <body class="dark-mode">
-    <div id="ad-top" style="text-align:center; margin: 1rem 0;">
-        <script type="text/javascript">
-	        atOptions = {
-		        'key' : '33e6a4f2bd7346c557e8569983b9a966',
-		        'format' : 'iframe',
-		        'height' : 90,
-		        'width' : 728,
-		        'params' : {}
-	        };
-        </script>
-        <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
+    <div id="ad-top" style="text-align: center; margin: 1rem 0;">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837"
+     crossorigin="anonymous"></script>
     </div>
     <header>
         <div class="header-content">
@@ -182,21 +173,12 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         <div class="game-frame-container">
             <iframe class="game-frame" id="gameFrame" allowfullscreen></iframe>
             <button class="fullscreen-btn" onclick="document.getElementById('gameFrame').requestFullscreen()">Fullscreen</button>
-            <button class="newtab-btn" onclick="window.open('https://genizymath.github.io/iframe/{GAME_ID}.html', '_blank')">Open in New Tab</button>
+            <button class="newtab-btn" onclick="window.open('https://genizymath.github.io/iframe/{PATHNAME}', '_blank')">Open in New Tab</button>
         </div>
 
-        <div id="ad-middle" style="text-align:center; margin: 2rem 0;">
-            <script type="text/javascript">
-	            atOptions = {
-		            'key' : '33e6a4f2bd7346c557e8569983b9a966',
-		            'format' : 'iframe',
-		            'height' : 90,
-		            'width' : 728,
-		            'params' : {}
-	            };
-            </script>
-            <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
-        </div>
+        <div id="ad-middle" style="text-align: center; margin: 2rem 0;">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837"
+     crossorigin="anonymous"></script>
         
         <div class="game-info">
             <img class="game-cover" id="coverImage" alt="{GAME_NAME} Game Cover">
@@ -263,18 +245,10 @@ TEMPLATE_HTML = """<!DOCTYPE html>
         </div>
     </footer>
 
-    <div id="ad-bottom" style="text-align:center; margin: 2rem 0;">
-        <script type="text/javascript">
-	        atOptions = {
-		        'key' : '33e6a4f2bd7346c557e8569983b9a966',
-		        'format' : 'iframe',
-		        'height' : 90,
-		        'width' : 728,
-		        'params' : {}
-	        };
-        </script>
-        <script type="text/javascript" src="//usefulspeak.com/33e6a4f2bd7346c557e8569983b9a966/invoke.js"></script>
-    </div>
+        <div id="ad-bottom" style="text-align: center; margin: 2rem 0;">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5521219086088837"
+     crossorigin="anonymous"></script>
+        </div>
 
     <script src="/javascript/script.js"></script>
 </body>
@@ -305,6 +279,7 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     
     game_name = game['name']
     game_cover = game['cover']
+	pathname = f"{game['url'].split("/")[1]}"
     game_name_url = re.sub(r'[^a-zA-Z0-9-]', '', game_name.replace(' ', '-').lower()).replace('--', '-')
     
     game_folder = os.path.join(OUTPUT_DIR, game_name_url)
@@ -316,12 +291,12 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
                                .replace('{GAME_COVER}', game_cover.replace(
                                    "{COVER_URL}", 
                                    "https://cdn.jsdelivr.net/gh/gn-math/covers@main"))\
-                               .replace('{GAME_URL}', "/iframe/"+game_id+".html")
-    
-    game_url = f'https://cdn.jsdelivr.net/gh/gn-math/html@main/{game_id}.html'
+                               .replace('{GAME_URL}', "/iframe/"+pathname)\
+                               .replace('{PATHNAME}', pathname)
+    game_url = f'https://cdn.jsdelivr.net/gh/gn-math/html@main/{pathname}'
     game_html = await fetch_text(session, game_url)
     
-    game_file_path = os.path.join(GAME_DIR, f"{game_id}.html")
+    game_file_path = os.path.join(GAME_DIR, f"{pathname}")
     with open(game_file_path, 'w', encoding='utf-8') as f:
         f.write(game_html)
     
