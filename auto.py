@@ -279,7 +279,7 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
     
     game_name = game['name']
     game_cover = game['cover']
-	pathname = f"{game['url'].split("/")[1]}"
+    pathname = f"{game['url'].split("/")[1]}"
     game_name_url = re.sub(r'[^a-zA-Z0-9-]', '', game_name.replace(' ', '-').lower()).replace('--', '-')
     
     game_folder = os.path.join(OUTPUT_DIR, game_name_url)
