@@ -32,7 +32,7 @@
     "iframe/31.html",
     "iframe/32.html",
     "iframe/33.html",
-    "iframe/34.html",
+    "iframe/34-fixed.html",
     "iframe/36.html",
     "iframe/37.html",
     "iframe/38.html",
@@ -476,7 +476,7 @@
     "iframe/499.html",
     "iframe/500.html",
     "iframe/501.html",
-    "iframe/502.html",
+    "iframe/502-fixed.html",
     "iframe/503.html",
     "iframe/504.html",
     "iframe/505.html",
@@ -494,7 +494,7 @@
     "iframe/517.html",
     "iframe/518.html",
     "iframe/519.html",
-    "iframe/520.html",
+    "iframe/520-fix.html",
     "iframe/521.html",
     "iframe/522.html",
     "iframe/523-f.html",
@@ -691,5 +691,8 @@
     "iframe/716-fix2.html",
     "iframe/717-fix2.html",
     "iframe/718.html",
-    "iframe/719.html"
+    "iframe/719.html",
+    "iframe/720.html",
+    "iframe/721.html",
+    "iframe/722.html"
 ]
