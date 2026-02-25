@@ -113,7 +113,7 @@
     "iframe/114-f.html",
     "iframe/115.html",
     "iframe/116.html",
-    "iframe/117.html",
+    "iframe/117-fix.html",
     "iframe/118.html",
     "iframe/119.html",
     "iframe/120.html",
@@ -708,5 +708,6 @@
     "iframe/733.html",
     "iframe/734.html",
     "iframe/735.html",
-    "iframe/736.html"
+    "iframe/736.html",
+    "iframe/737.html"
 ]
