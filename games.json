@@ -243,7 +243,7 @@
     "iframe/262.html",
     "iframe/263.html",
     "iframe/264.html",
-    "iframe/265.html",
+    "iframe/265-fix.html",
     "iframe/266-a.html",
     "iframe/267.html",
     "iframe/268.html",
@@ -684,7 +684,7 @@
     "iframe/709-fixagain.html",
     "iframe/710-fix.html",
     "iframe/711.html",
-    "iframe/712.html",
+    "iframe/712-f.html",
     "iframe/713.html",
     "iframe/714.html",
     "iframe/715.html",
@@ -715,5 +715,6 @@
     "iframe/740.html",
     "iframe/741.html",
     "iframe/742.html",
-    "iframe/743.html"
+    "iframe/743.html",
+    "iframe/744.html"
 ]
