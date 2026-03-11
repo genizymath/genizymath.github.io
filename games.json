@@ -710,7 +710,7 @@
     "iframe/735.html",
     "iframe/736.html",
     "iframe/737.html",
-    "iframe/738.html",
+    "iframe/738-u.html",
     "iframe/739.html",
     "iframe/740.html",
     "iframe/741.html",
@@ -725,5 +725,6 @@
     "iframe/750-u.html",
     "iframe/751.html",
     "iframe/752.html",
-    "iframe/753.html"
+    "iframe/753.html",
+    "iframe/754.html"
 ]
