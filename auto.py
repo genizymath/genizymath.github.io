@@ -301,10 +301,10 @@ async def process_game(session: ClientSession, game: dict, OUTPUT_DIR: str, GAME
                                .replace('{GAME_ID}', game_id)\
                                .replace('{GAME_COVER}', game_cover.replace(
                                    "{COVER_URL}", 
-                                   "https://cdn.jsdelivr.net/gh/gn-math/covers@main"))\
+                                   "https://cdn.jsdelivr.net/gh/freebuisness/covers@main"))\
                                .replace('{GAME_URL}', "/iframe/"+pathname)\
                                .replace('{PATHNAME}', pathname)
-    game_url = f'https://cdn.jsdelivr.net/gh/gn-math/html@main/{pathname}'
+    game_url = f'https://cdn.jsdelivr.net/gh/freebuisness/html@main/{pathname}'
     game_html = await fetch_text(session, game_url)
     
     game_file_path = os.path.join(GAME_DIR, f"{pathname}")
@@ -333,7 +333,7 @@ async def main():
         hash = hash_response[0]['sha']
         print(f"latest hash: {hash}")
         
-        zones_url = f'https://cdn.jsdelivr.net/gh/gn-math/assets@{hash}/zones.json'
+        zones_url = f'https://cdn.jsdelivr.net/gh/freebuisness/assets@{hash}/zones.json'
         games = await fetch_json(session, zones_url)
         print("loaded zones")
         
