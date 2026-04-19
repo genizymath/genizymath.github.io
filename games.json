@@ -741,7 +741,7 @@
     "iframe/767.html",
     "iframe/768.html",
     "iframe/769.html",
-    "iframe/770.html",
+    "iframe/770-update.html",
     "iframe/771-z.html",
     "iframe/772.html",
     "iframe/773.html",
@@ -766,5 +766,7 @@
     "iframe/792.html",
     "iframe/793.html",
     "iframe/794.html",
-    "iframe/795.html"
+    "iframe/795.html",
+    "iframe/796.html",
+    "iframe/797.html"
 ]
