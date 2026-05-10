@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/web-ports/talking-hippo@main/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Web Player | Talking Hippo</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html, body {
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        overflow: hidden;
+      }
+      #unity-container {
+        width: 100%;
+        height: 100%;
+        background: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+      }
+      #unity-canvas {
+        display: block;
+        background: #000000;
+      }
+      #unity-loading-bar {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        display: none;
+        z-index: 10;
+      }
+      #unity-warning {
+        position: absolute;
+        left: 50%;
+        top: 5%;
+        transform: translateX(-50%);
+        z-index: 20;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="unity-container">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+    </div>
+    <script>
+      const GAME_ASPECT = 10 / 16;
+      function resizeUnityCanvas() {
+        const canvas = document.getElementById('unity-canvas');
+        if (!canvas) return;
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        let w, h;
+        if (vw / vh < GAME_ASPECT) {
+          w = vw;
+          h = vw / GAME_ASPECT;
+        } else {
+          h = vh;
+          w = vh * GAME_ASPECT;
+        }
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        canvas.style.display = 'block';
+        canvas.style.margin = '0';
+        canvas.style.position = 'relative';
+        canvas.width = w;
+        canvas.height = h;
+      } 
+      setInterval(() => {
+        resizeUnityCanvas();
+      }, 500);
+      window.addEventListener('resize', resizeUnityCanvas);
+      window.addEventListener('orientationchange', resizeUnityCanvas);
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var warningBanner = document.querySelector("#unity-warning");
+
+      function unityShowBanner(msg, type) {
+      }
+
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/TalkingHippo.loader.js";
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      loadingBar.style.display = "block";
+
+      async function fetchWithProgress(url, onProgress) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Fetch failed: ' + url + ' (' + response.status + ')');
+        const contentLength = response.headers.get('content-length');
+        const total = contentLength ? parseInt(contentLength, 10) : 0;
+        const reader = response.body.getReader();
+        const chunks = [];
+        let loaded = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          chunks.push(value);
+          loaded += value.length;
+          if (total > 0 && onProgress) onProgress(loaded / total);
+        }
+        const combined = new Uint8Array(loaded);
+        let offset = 0;
+        for (const chunk of chunks) {
+          combined.set(chunk, offset);
+          offset += chunk.length;
+        }
+        return combined.buffer;
+      }
+
+      async function decompressZip(zipBuffer, mimeType) {
+        const zip = await JSZip.loadAsync(zipBuffer);
+        const entry = Object.values(zip.files).find(f => !f.dir);
+        if (!entry) throw new Error('Empty zip file');
+        const arrayBuffer = await entry.async('arraybuffer');
+        return URL.createObjectURL(new Blob([arrayBuffer], { type: mimeType }));
+      }
+
+      async function fetchAndDecompress(zipUrl, mimeType, slot, onProgress) {
+        const buffer = await fetchWithProgress(zipUrl, (p) => {
+          slot.progress = p;
+          onProgress();
+        });
+        slot.progress = 1;
+        onProgress();
+        return decompressZip(buffer, mimeType);
+      }
+
+      const zipFiles = [
+        { url: buildUrl + "/TalkingHippo.data.zip",        mime: 'application/octet-stream' },
+        { url: buildUrl + "/TalkingHippo.wasm.zip",         mime: 'application/wasm' },
+        { url: buildUrl + "/TalkingHippo.framework.js.zip", mime: 'text/javascript' },
+      ];
+
+      (async () => {
+        try {
+          const slots = zipFiles.map(() => ({ progress: 0 }));
+
+          function onProgress() {
+            const avg = slots.reduce((sum, s) => sum + s.progress, 0) / slots.length;
+            progressBarFull.style.width = (avg * 100) + '%';
+          }
+
+          const blobUrls = await Promise.all(
+            zipFiles.map((f, i) => fetchAndDecompress(f.url, f.mime, slots[i], onProgress))
+          );
+
+          const [dataBlobUrl, wasmBlobUrl, frameworkBlobUrl] = blobUrls;
+
+          var script = document.createElement("script");
+          script.src = loaderUrl;
+          script.onload = () => {
+            createUnityInstance(canvas, {
+              arguments: [],
+              dataUrl: dataBlobUrl,
+              frameworkUrl: frameworkBlobUrl,
+              codeUrl: wasmBlobUrl,
+              streamingAssetsUrl: "StreamingAssets",
+              companyName: "DefaultCompany",
+              productName: "Talking Hippo",
+              productVersion: "1.0",
+              showBanner: unityShowBanner,
+            }, (progress) => {
+              progressBarFull.style.width = 100 * progress + "%";
+            }).then((unityInstance) => {
+              loadingBar.style.display = "none";
+              blobUrls.forEach(url => URL.revokeObjectURL(url));
+              resizeUnityCanvas();
+            }).catch((message) => {
+              alert(message);
+            });
+          };
+          document.body.appendChild(script);
+
+        } catch (err) {
+          alert('Failed to load game: ' + err.message);
+        }
+      })();
+    </script>
+  </body>
+</html>
