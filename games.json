@@ -784,7 +784,7 @@
     "iframe/810-fix.html",
     "iframe/811.html",
     "iframe/812.html",
-    "iframe/813-f2.html",
+    "iframe/813-f3.html",
     "iframe/814.html",
     "iframe/815.html",
     "iframe/816.html",
@@ -808,5 +808,7 @@
     "iframe/834.html",
     "iframe/835.html",
     "iframe/836.html",
-    "iframe/837.html"
+    "iframe/837.html",
+    "iframe/838.html",
+    "iframe/839.html"
 ]
