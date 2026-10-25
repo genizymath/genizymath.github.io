@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <base href="https://cdn.jsdelivr.net/gh/web-ports/pet-the-cat/">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden; background: #000;
+      display: flex; align-items: center; justify-content: center;
+      user-select: none; -webkit-user-select: none;
+      touch-action: none; overscroll-behavior: none;
+    }
+    #loading-text {
+      position: fixed; z-index: 10; color: #fff; font: 28px cursive;
+      text-align: center; padding: 20px; pointer-events: none;
+    }
+    #canvas {
+      position: absolute; top: 0; bottom: 0; left: 0; right: 0;
+      margin: auto; border: 0; outline: none; background: #000;
+      max-width: 100%; max-height: 100%;
+      aspect-ratio: 16 / 9; object-fit: contain;
+      image-rendering: pixelated; display: block;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading-text" role="status" aria-live="polite">LOADING...</div>
+  <canvas id="canvas" width="960" height="540" oncontextmenu="event.preventDefault()" tabindex="0"></canvas>
+
+  <script>
+/* Inline in the existing HTML launcher, then call createSplitLoader(manifest, label). */
+function createSplitLoader(assets, element, {baseURL = document.baseURI, concurrency = 3} = {}) {
+    if (!element) throw new Error('A loading text element is required');
+    if (!Number.isInteger(concurrency) || concurrency < 1) throw new Error('concurrency must be a positive integer');
+    const DOWNLOAD_ASSETS = assets;
+    const loadingText = element;
+    const originalFetch = window.fetch.bind(window);
+    const assetURLs = new Map();
+    let totalBytes = DOWNLOAD_ASSETS.reduce((sum, asset) =>
+      sum + asset.parts.reduce((bytes, part) => bytes + part.bytes, 0), 0);
+    let loadedBytes = 0;
+    let loadingFailed = false;
+
+    function updateLoadingText() {
+      if (loadingFailed) return;
+      const mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+      const mbTotal = (totalBytes / (1024 * 1024)).toFixed(2);
+      loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+    }
+
+    async function fetchWithProgress(part) {
+      const response = await originalFetch(new URL(part.url, baseURL));
+      if (!response.ok) throw new Error(`Could not load ${part.url} (HTTP ${response.status})`);
+      let expected = part.bytes;
+      const chunks = [];
+      let received = 0;
+      if (response.body) {
+        const reader = response.body.getReader();
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          received += value.byteLength;
+          loadedBytes += value.byteLength;
+          chunks.push(value);
+          updateLoadingText();
+        }
+      } else {
+        const bytes = new Uint8Array(await response.arrayBuffer());
+        received = bytes.byteLength;
+        loadedBytes += received;
+        chunks.push(bytes);
+      }
+      totalBytes += received - expected;
+      updateLoadingText();
+      return new Blob(chunks);
+    }
+
+    function assetKey(url) {
+      const resolved = new URL(url, baseURL);
+      return resolved.origin + resolved.pathname + resolved.search;
+    }
+
+    function mimeType(url) {
+      if (url.endsWith('.js')) return 'text/javascript';
+      if (url.endsWith('.wasm')) return 'application/wasm';
+      if (url.endsWith('.mp4')) return 'video/mp4';
+      return 'application/octet-stream';
+    }
+
+    async function mergeFiles(asset) {
+      const buffers = [];
+      for (const part of asset.parts) buffers.push(await fetchWithProgress(part));
+      const merged = new Blob(buffers, { type: asset.type || mimeType(asset.url) });
+      assetURLs.set(assetKey(asset.url), URL.createObjectURL(merged));
+    }
+
+    function resolveAsset(url) {
+      try { return assetURLs.get(assetKey(url)) || url; }
+      catch { return url; }
+    }
+
+    function installAssetRoutes() {
+      // Route both loading paths used by the GameMaker and FMOD runtimes to the downloaded blobs.
+      window.fetch = function(input, init) {
+        const url = input instanceof Request ? input.url : String(input);
+        const mapped = resolveAsset(url);
+        return originalFetch(mapped === url ? input :
+          input instanceof Request ? new Request(mapped, input) : mapped, init);
+      };
+      const originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+        return originalOpen.call(this, method, resolveAsset(String(url)), ...rest);
+      };
+
+    }
+
+    function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = resolveAsset(url);
+        script.onload = resolve;
+        script.onerror = () => reject(new Error(`Could not start ${url}`));
+        document.body.appendChild(script);
+      });
+    }
+
+
+    let downloadPromise;
+    async function downloadAll() {
+      updateLoadingText();
+      let nextAsset = 0;
+      try {
+        await Promise.all(Array.from({length: concurrency}, async () => {
+          while (!loadingFailed && nextAsset < DOWNLOAD_ASSETS.length) {
+            await mergeFiles(DOWNLOAD_ASSETS[nextAsset++]);
+          }
+        }));
+        installAssetRoutes();
+      } catch (error) {
+        loadingFailed = true;
+        loadingText.textContent = `Loading failed: ${error.message}`;
+        throw error;
+      }
+    }
+    window.addEventListener('pagehide', event => {
+      if (!event.persisted) for (const url of assetURLs.values()) URL.revokeObjectURL(url);
+    });
+    return {
+      download() { return downloadPromise || (downloadPromise = downloadAll()); },
+      loadScript, resolveAsset,
+      get loadedBytes() { return loadedBytes; },
+      get totalBytes() { return totalBytes; }
+    };
+}
+
+    const DOWNLOAD_ASSETS = [
+  {
+    "url": "975MaruSC-Bold.ttf",
+    "type": "font/ttf",
+    "parts": [
+      {
+        "url": "975MaruSC-Bold.ttf",
+        "bytes": 1149992
+      }
+    ]
+  },
+  {
+    "url": "Localized_text_PTC.csv",
+    "type": "application/vnd.ms-excel",
+    "parts": [
+      {
+        "url": "Localized_text_PTC.csv",
+        "bytes": 218825
+      }
+    ]
+  },
+  {
+    "url": "audio-worklet.js",
+    "type": "text/plain",
+    "parts": [
+      {
+        "url": "audio-worklet.js",
+        "bytes": 502
+      }
+    ]
+  },
+  {
+    "url": "game.unx",
+    "type": "application/octet-stream",
+    "parts": [
+      {
+        "url": "game.unx.part1",
+        "bytes": 20866662
+      },
+      {
+        "url": "game.unx.part2",
+        "bytes": 20866662
+      },
+      {
+        "url": "game.unx.part3",
+        "bytes": 20866662
+      },
+      {
+        "url": "game.unx.part4",
+        "bytes": 20866662
+      },
+      {
+        "url": "game.unx.part5",
+        "bytes": 10537402
+      }
+    ]
+  },
+  {
+    "url": "options.ini",
+    "type": "application/octet-stream",
+    "parts": [
+      {
+        "url": "options.ini",
+        "bytes": 75
+      }
+    ]
+  },
+  {
+    "url": "runner.wasm",
+    "type": "application/wasm",
+    "parts": [
+      {
+        "url": "runner.wasm",
+        "bytes": 5690211
+      }
+    ]
+  }
+];
+    const loadingText = document.getElementById("loading-text");
+    const loader = createSplitLoader(DOWNLOAD_ASSETS, loadingText);
+    window.splitLoader = loader;
+    let loadingFailed = false;
+    function showLoadingError(error) {
+      loadingFailed = true;
+      loadingText.hidden = false;
+      loadingText.textContent = "Loading failed: " + (error.message || error);
+      console.error(error);
+    }
+
+    // GameMaker runtime stubs
+    window.g_pAddAsyncMethod = 0;
+    window.setAddAsyncMethod  = function(a) { window.g_pAddAsyncMethod = a; };
+    window.manifestFiles      = function()  { return "game.unx"; };
+    window.manifestFilesMD5   = function()  { return [""]; };
+    window.g_pWadLoadCallback = function(a, b) {};
+    window.hasJSExceptionHandler  = function()  { return false; };
+    window.doJSExceptionHandler   = function(c) { console.error("GM Exception:", c); };
+    window.report_stats = function() {};
+    window.onFirstFrameRendered = function() {
+      if (!loadingFailed) loadingText.hidden = true;
+      if (typeof resizeCanvas === "function") resizeCanvas();
+      document.getElementById("canvas")?.focus();
+    };
+
+
+    function patchGLShader(proto) {
+      if (!proto) return;
+      const orig = proto.shaderSource;
+      proto.shaderSource = function(shader, source) {
+        if (/dFdx|dFdy|fwidth/.test(source)) {
+          if (this.getExtension) this.getExtension("OES_standard_derivatives");
+          if (!source.includes("GL_OES_standard_derivatives"))
+            source = "#extension GL_OES_standard_derivatives : enable\n" + source;
+        }
+        if (source.includes("GL_OES_EGL_image_external") || source.includes("samplerExternalOES")) {
+          source = source.replace(/#extension\s+GL_OES_EGL_image_external\s*:\s*\w+/g, "");
+          source = source.replace(/samplerExternalOES/g, "sampler2D");
+        }
+        return orig.call(this, shader, source);
+      };
+    }
+    if (typeof WebGLRenderingContext  !== "undefined") patchGLShader(WebGLRenderingContext.prototype);
+    if (typeof WebGL2RenderingContext !== "undefined") patchGLShader(WebGL2RenderingContext.prototype);
+
+    const canvas = document.getElementById("canvas");
+
+    function unlockAudio() {
+      if (typeof ja !== "undefined" && ja?.state === "suspended") ja.resume();
+      if (typeof Module !== "undefined" && Module.audioContext?.state === "suspended")
+        Module.audioContext.resume();
+      if (canvas && document.activeElement !== canvas) canvas.focus();
+    }
+    ["click", "keydown", "touchstart"].forEach(t =>
+      window.addEventListener(t, unlockAudio, { passive: true })
+    );
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const doc = document.documentElement, body = document.body;
+      const W = doc?.clientWidth  || body?.clientWidth  || window.innerWidth  || 960;
+      const H = doc?.clientHeight || body?.clientHeight || window.innerHeight || 540;
+      if (W <= 0 || H <= 0) return;
+      const aspect = 960 / 540;
+      const [w, h] = W / H > aspect ? [Math.round(H * aspect), H] : [W, Math.round(W / aspect)];
+      canvas.style.width = w + "px"; canvas.style.height = h + "px";
+    }
+    window.addEventListener("resize",            resizeCanvas);
+    window.addEventListener("orientationchange", resizeCanvas);
+    ["fullscreenchange", "webkitfullscreenchange"].forEach(e =>
+      document.addEventListener(e, () => setTimeout(resizeCanvas, 50))
+    );
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(resizeCanvas);
+      ro.observe(document.documentElement);
+      ro.observe(document.body);
+    }
+    window.addEventListener("message", function(e) {
+      if (!e?.data) return;
+      if (["resize", e.data.type, e.data.action].includes("resize")) resizeCanvas();
+      if (["focus",  e.data.action].includes("focus")) canvas?.focus();
+    });
+    resizeCanvas();
+
+    const assetsReady = loader.download();
+    window.GAME_UNX_PROMISE = assetsReady.then(() =>
+      fetch("game.unx").then(r => r.arrayBuffer()).then(b => new Uint8Array(b))
+    );
+    window.GAME_UNX_PROMISE.catch(showLoadingError);
+
+    window.EMBEDDED_FILES = {};
+    const embeddedReady = assetsReady.then(() => Promise.all([
+      fetch("options.ini")            .then(r => r.arrayBuffer()).then(b => new Uint8Array(b)),
+      fetch("Localized_text_PTC.csv") .then(r => r.arrayBuffer()).then(b => new Uint8Array(b)),
+      fetch("975MaruSC-Bold.ttf")     .then(r => r.arrayBuffer()).then(b => new Uint8Array(b)),
+    ])).then(([opt, csv, font]) => {
+      const ef = window.EMBEDDED_FILES;
+      ef["options.ini"]            = ef["assets/options.ini"]            = opt;
+      ef["Localized_text_PTC.csv"] = ef["assets/Localized_text_PTC.csv"] = csv;
+      ef["localized_text_ptc.csv"] = ef["assets/localized_text_ptc.csv"] = csv;
+      ef["975MaruSC-Bold.ttf"]     = ef["assets/975MaruSC-Bold.ttf"]     = font;
+      ef["975marusc-bold.ttf"]     = ef["assets/975marusc-bold.ttf"]     = font;
+      ef["975MaruSC-Regular.ttf"]  = ef["assets/975MaruSC-Regular.ttf"]  = font;
+      ef["975marusc-regular.ttf"]  = ef["assets/975marusc-regular.ttf"]  = font;
+    });
+
+    window.Module = {
+      canvas: canvas,
+      arguments: [],
+      locateFile: function(path) { return loader.resolveAsset(new URL(path, document.baseURI).href); },
+      onAbort: showLoadingError,
+      preRun: [function() {
+        const opt  = window.EMBEDDED_FILES["options.ini"]            || new Uint8Array(0);
+        const csv  = window.EMBEDDED_FILES["Localized_text_PTC.csv"] || new Uint8Array(0);
+        const font = window.EMBEDDED_FILES["975MaruSC-Bold.ttf"]     || new Uint8Array(0);
+        Module.FS_createPath("/", "assets", true, true);
+        [
+          ["/assets","options.ini",opt],            ["/","options.ini",opt],
+          ["/assets","Localized_text_PTC.csv",csv], ["/","Localized_text_PTC.csv",csv],
+          ["/assets","localized_text_ptc.csv",csv], ["/","localized_text_ptc.csv",csv],
+          ["/assets","975marusc-bold.ttf",font],    ["/","975marusc-bold.ttf",font],
+          ["/assets","975MaruSC-Bold.ttf",font],    ["/","975MaruSC-Bold.ttf",font],
+          ["/assets","975marusc-regular.ttf",font], ["/","975marusc-regular.ttf",font],
+          ["/assets","975MaruSC-Regular.ttf",font], ["/","975MaruSC-Regular.ttf",font],
+        ].forEach(([dir,name,data]) => Module.FS_createDataFile(dir, name, data, true, true, true));
+        resizeCanvas();
+      }],
+      postRun:  [function() { resizeCanvas(); canvas.focus(); }],
+      setStatus: function() { resizeCanvas(); },
+      print:    function(t) { if (!t?.includes("uninitialised yyal")) console.log(t); },
+      printErr: function(t) { if (!t?.includes("uninitialised yyal")) console.error(t); },
+    };
+    var Module = window.Module;
+
+    var onFirstFrameRendered = window.onFirstFrameRendered;
+    var manifestFiles        = window.manifestFiles;
+    var manifestFilesMD5     = window.manifestFilesMD5;
+    var g_pWadLoadCallback   = window.g_pWadLoadCallback;
+    var setAddAsyncMethod    = window.setAddAsyncMethod;
+  </script>
+
+  <script>
+    Promise.all([assetsReady, embeddedReady, window.GAME_UNX_PROMISE]).then(async () => {
+      const source = await fetch("audio-worklet.js").then(r => r.text());
+      window.AUDIO_WORKLET_BLOB_URL = URL.createObjectURL(
+        new Blob([source], { type: "application/javascript" })
+      );
+      await loader.loadScript("runner.js");
+    }).catch(showLoadingError);
+  </script>
+</body>
+</html>

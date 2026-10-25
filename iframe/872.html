@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="https://cdn.jsdelivr.net/gh/Camzzz-vrgt/the-one-fish-web@main/game/">
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08070b;color:#fff;font:16px system-ui,sans-serif}
+#unity-canvas{display:block;position:absolute;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);left:50%;top:50%;transform:translate(-50%,-50%);outline:none}
+#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;gap:18px;background:#08070b}
+#loading h1{font-size:clamp(22px,4vw,36px);margin:0}#loading p{margin:0;color:#c7c1d2}
+progress{width:min(340px,80vw);height:10px;accent-color:#b600ff;justify-self:center}
+#port-intro{position:fixed;inset:0;z-index:10;background:#000;display:grid;place-items:center}
+#port-intro img{width:100%;height:100%;object-fit:contain;position:absolute}
+#error{max-width:650px;padding:20px;white-space:pre-wrap;color:#ffb8c6}
+</style>
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="0" aria-label="The One Fish solo game"></canvas>
+<div id="loading"><h1>The One Fish</h1><p id="status">Loading solo game...</p><progress id="progress" max="1" value="0"></progress><div id="error" hidden></div></div>
+<div id="port-intro" aria-label="Port by camzzz"><img src="assets/port-by-camzzz.png" alt="Port by camzzz"></div>
+<script>
+// Route the game's final mix through a fast compressor to contain overlapping
+// impacts. Weak/quiet sounds are not amplified.
+if(window.AudioNode && window.AudioContext){
+ const connect=AudioNode.prototype.connect;
+ const limiters=new WeakMap();
+ AudioNode.prototype.connect=function(destination,...ports){
+  if(destination===this.context.destination){
+   let limiter=limiters.get(this.context);
+   if(!limiter){
+    limiter=this.context.createDynamicsCompressor();
+    limiter.threshold.value=-12;limiter.knee.value=3;limiter.ratio.value=20;
+    limiter.attack.value=0.003;limiter.release.value=0.18;
+    if(new URLSearchParams(location.search).has('silentTest')){
+     const silence=this.context.createGain();silence.gain.value=0;
+     connect.call(limiter,silence);connect.call(silence,destination);
+    }else connect.call(limiter,destination);
+    limiters.set(this.context,limiter);
+   }
+   return connect.call(this,limiter,...ports);
+  }
+  return connect.call(this,destination,...ports);
+ };
+}
+const reportedErrors=new Set();
+const originalConsoleError=console.error.bind(console);
+console.error=(...args)=>{const key=args.map(String).join(' ');if(reportedErrors.has(key))return;reportedErrors.add(key);originalConsoleError(...args);};
+const canvas=document.getElementById('unity-canvas');
+// Pointer-lock rejection is recoverable; an unhandled browser promise would
+// otherwise trigger Unity's fatal-error handler and leave audio loops running.
+if(canvas.requestPointerLock){
+ const nativePointerLock=canvas.requestPointerLock.bind(canvas);
+ let pointerLockPending=false;
+ canvas.requestPointerLock=(...args)=>{
+  if(pointerLockPending)return Promise.resolve();
+  pointerLockPending=true;
+  try{
+   return Promise.resolve(nativePointerLock(...args)).catch(error=>{
+    console.warn('Mouse capture was declined by the browser; click the game to retry.',error.name);
+   }).finally(()=>{pointerLockPending=false;});
+  }catch(error){pointerLockPending=false;console.warn('Mouse capture unavailable:',error.name);return Promise.resolve();}
+ };
+}
+const art=document.querySelector('#port-intro img');
+let introScheduled=false;
+function beginIntro(){if(introScheduled)return;introScheduled=true;setTimeout(()=>{document.getElementById('port-intro').remove();canvas.focus();},3000);}
+if(art.complete)beginIntro();else{art.addEventListener('load',beginIntro,{once:true});art.addEventListener('error',beginIntro,{once:true});}
+const manifest={"loaderUrl":"Build/build.loader.js","dataUrl":{"size":153883670,"type":"application/octet-stream","label":"game data","parts":[{"name":"chunks/build.data.part001","size":18000000,"sha256":"2be41dc8d67fe5ad94d675f3ce7645d15fedd22f4c86fbf6434f9ffb17d605f6"},{"name":"chunks/build.data.part002","size":18000000,"sha256":"f5c687dca55f94814f5aaaf19e69ce94bc0bb6180a24068b78b1f6adaf3541c4"},{"name":"chunks/build.data.part003","size":18000000,"sha256":"dd367c3777907837fe74ff90eb93f6e0a5c5dd57926654eb6eca30f3440a13e4"},{"name":"chunks/build.data.part004","size":18000000,"sha256":"8663efacdcdc89e5153dd097beb1fde3250636d475b19e9bdf71cbc862f023ba"},{"name":"chunks/build.data.part005","size":18000000,"sha256":"ea8012dd890211948c1339bb507cf8acdfa0c9fcd5af8fa2763a5a291864492c"},{"name":"chunks/build.data.part006","size":18000000,"sha256":"41cdfa4558a5e954b77918a04311b34390feb9bfa077eb46f0865211e44d6ab9"},{"name":"chunks/build.data.part007","size":18000000,"sha256":"deadca51ef463ed2c123c55004320b8bd383ad0c69b27599ed0259ac190ffbb0"},{"name":"chunks/build.data.part008","size":18000000,"sha256":"3f161c6ab5a238d5ba689d7c52409e38f77280978e9c22ec8decc8111c57d7fd"},{"name":"chunks/build.data.part009","size":9883670,"sha256":"94f07778b11f19889fdc9674c370407ab60c985cbe6118796140677fa470692c"}]},"frameworkUrl":"Build/build.framework.js","codeUrl":{"size":158360302,"type":"application/wasm","label":"game code","parts":[{"name":"chunks/build.wasm.part001","size":18000000,"sha256":"2ce565739e15c0346e557f47fc03cdb7383e9e06b8258cd68426f35a5837d32d"},{"name":"chunks/build.wasm.part002","size":18000000,"sha256":"342f8089d93af1838bcce42a464e5f8fb1d4885a9b6f1f1a43bc5b477eb09aa2"},{"name":"chunks/build.wasm.part003","size":18000000,"sha256":"7c521cc89e2347eac1306594b60bf7a4ca394563069199dfa6f60f79e362257a"},{"name":"chunks/build.wasm.part004","size":18000000,"sha256":"7e502f7ac339274cbfdcd14bd002defc8806c2d6d7b859b8c2117f07e92e9787"},{"name":"chunks/build.wasm.part005","size":18000000,"sha256":"3e3ee34a2ea7e16e1c446118f48ddbfe88ddf4a6c3648be8984989894ea322c1"},{"name":"chunks/build.wasm.part006","size":18000000,"sha256":"97abadfaa5bbce556045a2e1fc8a7c0d1f0c4ab5804cfb31ceac6f7e075a0db5"},{"name":"chunks/build.wasm.part007","size":18000000,"sha256":"f2db096ee6485b6d6bad814e71807986ca2e87784986c271eedb8167d959d1ff"},{"name":"chunks/build.wasm.part008","size":18000000,"sha256":"7a0c2327d764c40657bd491cd8e2fb694c66e31c03318b67d5cd6ecdfbc77738"},{"name":"chunks/build.wasm.part009","size":14360302,"sha256":"ab9d7819ad2ea856f75a467203547eeeabd0e5191bd3ab4a7e6afd09efb487d3"}]}};
+const objectUrls=[];
+async function assetUrl(asset){
+ if(typeof asset==='string')return asset;
+ const parts=[];
+ for(let i=0;i<asset.parts.length;i++){
+  const part=typeof asset.parts[i]==='string'?asset.parts[i]:asset.parts[i].name;
+  const response=await fetch(part);
+  if(!response.ok)throw new Error('Could not load '+part+' (HTTP '+response.status+')');
+  parts.push(await response.blob());
+  document.getElementById('status').textContent='Loading '+asset.label+'â€¦ '+Math.round((i+1)/asset.parts.length*100)+'%';
+ }
+ const url=URL.createObjectURL(new Blob(parts,{type:asset.type}));objectUrls.push(url);return url;
+}
+async function start(){
+ const config={companyName:'CamzzzWebPorts',productName:'The One Fish - Solo Web Port',productVersion:'1.0',streamingAssetsUrl:'StreamingAssets',devicePixelRatio:1,autoSyncPersistentDataPath:true};
+ for(const key of ['dataUrl','frameworkUrl','codeUrl'])config[key]=await assetUrl(manifest[key]);
+ config.showBanner=(message,type)=>console[type==='error'?'error':'warn'](message);
+ const loader=document.createElement('script');loader.src=manifest.loaderUrl;
+ await new Promise((resolve,reject)=>{loader.onload=resolve;loader.onerror=()=>reject(new Error('Could not load the Unity launcher.'));document.body.appendChild(loader);});
+ document.getElementById('status').textContent='Starting gameâ€¦';
+ window.unityInstance=await createUnityInstance(canvas,config,value=>{document.getElementById('progress').value=value;});
+ document.getElementById('loading').remove();canvas.focus();
+ for(const url of objectUrls)URL.revokeObjectURL(url);
+}
+start().catch(error=>{console.error(error);const details=String(error&&error.message||error);document.getElementById('status').textContent='The game could not start';const panel=document.getElementById('error');panel.hidden=false;panel.textContent=details;});
+canvas.addEventListener('pointerdown',()=>canvas.focus());
+window.addEventListener('keydown',event=>{if(document.activeElement===canvas&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code))event.preventDefault();});
+</script>
+</body>
+</html>

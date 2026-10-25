@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<base href="https://cdn.jsdelivr.net/gh/Camzzz-vrgt/gamble-with-your-friends-web@main/game/">
+<style>
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#08070b;color:#fff;font:16px system-ui,sans-serif}
+#unity-canvas{display:block;position:absolute;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);left:50%;top:50%;transform:translate(-50%,-50%);outline:none}
+#loading{position:fixed;inset:0;display:grid;place-content:center;text-align:center;gap:18px;background:#08070b}
+#loading h1{font-size:clamp(22px,4vw,36px);margin:0}#loading p{margin:0;color:#c7c1d2}
+progress{width:min(340px,80vw);height:10px;accent-color:#b600ff;justify-self:center}
+#port-intro{position:fixed;inset:0;z-index:10;background:#000;display:grid;place-items:center}
+#port-intro img{width:100%;height:100%;object-fit:contain;position:absolute}
+#error{max-width:650px;padding:20px;white-space:pre-wrap;color:#ffb8c6}
+</style>
+</head>
+<body>
+<canvas id="unity-canvas" tabindex="0" aria-label="Gamble With Your Friends solo game"></canvas>
+<div id="loading"><h1>Gamble With Your Friends</h1><p id="status">Loading solo game…</p><progress id="progress" max="1" value="0"></progress><div id="error" hidden></div></div>
+<div id="port-intro" aria-label="Port by camzzz"><img src="assets/port-by-camzzz.png" alt="Port by camzzz"></div>
+<script>
+// Route the game's final mix through a fast compressor to contain overlapping
+// impacts. Weak/quiet sounds are not amplified.
+if(window.AudioNode && window.AudioContext){
+ const connect=AudioNode.prototype.connect;
+ const limiters=new WeakMap();
+ AudioNode.prototype.connect=function(destination,...ports){
+  if(destination===this.context.destination){
+   let limiter=limiters.get(this.context);
+   if(!limiter){
+    limiter=this.context.createDynamicsCompressor();
+    limiter.threshold.value=-12;limiter.knee.value=3;limiter.ratio.value=20;
+    limiter.attack.value=0.003;limiter.release.value=0.18;
+    if(new URLSearchParams(location.search).has('silentTest')){
+     const silence=this.context.createGain();silence.gain.value=0;
+     connect.call(limiter,silence);connect.call(silence,destination);
+    }else connect.call(limiter,destination);
+    limiters.set(this.context,limiter);
+   }
+   return connect.call(this,limiter,...ports);
+  }
+  return connect.call(this,destination,...ports);
+ };
+}
+const reportedErrors=new Set();
+const originalConsoleError=console.error.bind(console);
+console.error=(...args)=>{const key=args.map(String).join(' ');if(reportedErrors.has(key))return;reportedErrors.add(key);originalConsoleError(...args);};
+const canvas=document.getElementById('unity-canvas');
+// Pointer-lock rejection is recoverable; an unhandled browser promise would
+// otherwise trigger Unity's fatal-error handler and leave audio loops running.
+if(canvas.requestPointerLock){
+ const nativePointerLock=canvas.requestPointerLock.bind(canvas);
+ let pointerLockPending=false;
+ canvas.requestPointerLock=(...args)=>{
+  if(pointerLockPending)return Promise.resolve();
+  pointerLockPending=true;
+  try{
+   return Promise.resolve(nativePointerLock(...args)).catch(error=>{
+    console.warn('Mouse capture was declined by the browser; click the game to retry.',error.name);
+   }).finally(()=>{pointerLockPending=false;});
+  }catch(error){pointerLockPending=false;console.warn('Mouse capture unavailable:',error.name);return Promise.resolve();}
+ };
+}
+const art=document.querySelector('#port-intro img');
+let introScheduled=false;
+function beginIntro(){if(introScheduled)return;introScheduled=true;setTimeout(()=>{document.getElementById('port-intro').remove();canvas.focus();},3000);}
+if(art.complete)beginIntro();else{art.addEventListener('load',beginIntro,{once:true});art.addEventListener('error',beginIntro,{once:true});}
+const manifest={"loaderUrl": "Build/build.loader.js", "frameworkUrl": "Build/build.framework.js", "dataUrl": {"parts": ["chunks/build.data.part001", "chunks/build.data.part002", "chunks/build.data.part003", "chunks/build.data.part004", "chunks/build.data.part005", "chunks/build.data.part006", "chunks/build.data.part007", "chunks/build.data.part008", "chunks/build.data.part009", "chunks/build.data.part010", "chunks/build.data.part011", "chunks/build.data.part012", "chunks/build.data.part013", "chunks/build.data.part014", "chunks/build.data.part015", "chunks/build.data.part016", "chunks/build.data.part017", "chunks/build.data.part018", "chunks/build.data.part019", "chunks/build.data.part020", "chunks/build.data.part021", "chunks/build.data.part022", "chunks/build.data.part023", "chunks/build.data.part024", "chunks/build.data.part025", "chunks/build.data.part026", "chunks/build.data.part027", "chunks/build.data.part028", "chunks/build.data.part029", "chunks/build.data.part030", "chunks/build.data.part031", "chunks/build.data.part032", "chunks/build.data.part033", "chunks/build.data.part034", "chunks/build.data.part035", "chunks/build.data.part036", "chunks/build.data.part037", "chunks/build.data.part038", "chunks/build.data.part039", "chunks/build.data.part040", "chunks/build.data.part041", "chunks/build.data.part042", "chunks/build.data.part043", "chunks/build.data.part044", "chunks/build.data.part045", "chunks/build.data.part046", "chunks/build.data.part047", "chunks/build.data.part048", "chunks/build.data.part049", "chunks/build.data.part050"], "type": "application/octet-stream", "label": "build.data"}, "codeUrl": {"parts": ["chunks/build.wasm.part001", "chunks/build.wasm.part002", "chunks/build.wasm.part003", "chunks/build.wasm.part004", "chunks/build.wasm.part005", "chunks/build.wasm.part006", "chunks/build.wasm.part007", "chunks/build.wasm.part008", "chunks/build.wasm.part009", "chunks/build.wasm.part010", "chunks/build.wasm.part011", "chunks/build.wasm.part012", "chunks/build.wasm.part013", "chunks/build.wasm.part014", "chunks/build.wasm.part015", "chunks/build.wasm.part016", "chunks/build.wasm.part017", "chunks/build.wasm.part018", "chunks/build.wasm.part019"], "type": "application/wasm", "label": "build.wasm"}};
+const objectUrls=[];
+async function assetUrl(asset){
+ if(typeof asset==='string')return asset;
+ const parts=[];
+ for(let i=0;i<asset.parts.length;i++){
+  const response=await fetch(asset.parts[i]);
+  if(!response.ok)throw new Error('Could not load '+asset.parts[i]+' (HTTP '+response.status+')');
+  parts.push(await response.blob());
+  document.getElementById('status').textContent='Loading '+asset.label+'… '+Math.round((i+1)/asset.parts.length*100)+'%';
+ }
+ const url=URL.createObjectURL(new Blob(parts,{type:asset.type}));objectUrls.push(url);return url;
+}
+async function start(){
+ const config={companyName:'CamzzzWebPorts',productName:'Gamble With Your Friends - Solo Web Port',productVersion:'1.0',streamingAssetsUrl:'StreamingAssets',devicePixelRatio:1,autoSyncPersistentDataPath:true};
+ for(const key of ['dataUrl','frameworkUrl','codeUrl'])config[key]=await assetUrl(manifest[key]);
+ config.showBanner=(message,type)=>console[type==='error'?'error':'warn'](message);
+ const loader=document.createElement('script');loader.src=manifest.loaderUrl;
+ await new Promise((resolve,reject)=>{loader.onload=resolve;loader.onerror=()=>reject(new Error('Could not load the Unity launcher.'));document.body.appendChild(loader);});
+ document.getElementById('status').textContent='Starting game…';
+ window.unityInstance=await createUnityInstance(canvas,config,value=>{document.getElementById('progress').value=value;});
+ document.getElementById('loading').remove();canvas.focus();
+ for(const url of objectUrls)URL.revokeObjectURL(url);
+}
+start().catch(error=>{console.error(error);document.getElementById('status').textContent='The game could not start';const panel=document.getElementById('error');panel.hidden=false;panel.textContent=error.message;});
+canvas.addEventListener('pointerdown',()=>canvas.focus());
+window.addEventListener('keydown',event=>{if(document.activeElement===canvas&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(event.code))event.preventDefault();});
+</script>
+</body>
+</html>
