@@ -1,1 +1,53 @@
-Package size exceeded the configured limit of 50 MB. Try https://github.com/freebuisness/html/tree/main/55-fix2.html instead.
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-L7856P3VNT"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-L7856P3VNT');
+</script><!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    
+    
+    
+    <base href="https://cdn.jsdelivr.net/gh/bubblfan/vex@1340a1189f16869133a4a42f11554b5d0ccc064b/x3m/">
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <link rel="apple-touch-icon" type="image/png" href="assets/icon.png" />
+    <link rel="stylesheet" href="assets/css/app.css" type="text/css" />
+    <script src="azerion-libs.min.js" defer onload="loadGame()"></script>
+
+</head>
+
+<body>
+    <div id="content"> </div>
+    <div id="loader">
+        <div id="loaderR"></div>
+    </div>
+    <div id="orientation"></div>
+    <script type="text/javascript">
+        var gameName = "vex-x3m.min.js";
+
+        function addScript(src, buster, callback) {
+            var s = document.createElement('script');
+            s.setAttribute('src', src);
+            if (typeof callback === 'function') {
+                s.onload = callback;
+            }
+            document.body.appendChild(s);
+        }
+
+        function loadGame() {
+            addScript('version.js', Date.now(), function() {
+                addScript(gameName, Date.now(), function() {
+                    new Game();
+                });
+            });
+        }
+    </script>
+
+
+</body>
+
+</html>
