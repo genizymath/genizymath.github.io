@@ -1,1 +1,32 @@
-Package size exceeded the configured limit of 50 MB. Try https://github.com/freebuisness/html/tree/main/787-fix.html instead.
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <base
+      href="https://cdn.jsdelivr.net/gh/SomeRandomFella/portsandrips@master/blockblast-port/play/"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div id="spinner" class="pending"></div>
+    <script>
+      (async () => {
+        const parts = [
+          "game.love.part000",
+          "game.love.part001",
+          "game.love.part002",
+          "game.love.part003",
+          "game.love.part004",
+        ];
+        const buffers = await Promise.all(
+          parts.map((p) => fetch(p).then((r) => r.arrayBuffer())),
+        );
+        const merged = new Blob(buffers, { type: "application/octet-stream" });
+        const url = URL.createObjectURL(merged);
+        const s = document.createElement("script");
+        s.src = "player.js?g=" + encodeURIComponent(url) + "&n=1";
+        document.body.appendChild(s);
+      })();
+    </script>
+  </body>
+</html>
